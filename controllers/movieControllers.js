@@ -11,17 +11,42 @@ function getMovies(req, res, next) {
 
 function createMovie(req, res, next) {
   const {
-    country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
   } = req.body;
   const owner = req.user._id;
 
   return Movie.create({
-    country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId, owner,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner,
   })
     .then((movie) => res.status(201).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
+        return next(
+          new BadRequestError(
+            'Переданы некорректные данные при создании карточки.',
+          ),
+        );
       }
       return next(err);
     });
@@ -46,7 +71,11 @@ function deleteMovie(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Переданы некорректные данные при удалении фильма.'));
+        return next(
+          new BadRequestError(
+            'Переданы некорректные данные при удалении фильма.',
+          ),
+        );
       }
       return next(err);
     });
