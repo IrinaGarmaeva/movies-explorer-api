@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
+const ConflictError = require('../errors/conflictError');
 
 function getCurrentUser(req, res, next) {
   const userId = req.user._id;
@@ -32,6 +33,9 @@ function updateUserInfo(req, res, next) {
     .catch((err) => {
       if (err.name === 'ValidationError' || 'CastError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError(`Пользователь с электронным адресом: ${email} уже зарегистрирован`));
       }
       return next(err);
     });
