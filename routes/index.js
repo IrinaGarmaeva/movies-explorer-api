@@ -1,9 +1,10 @@
 const router = require('express').Router();
-
 const userRoutes = require('./userRoutes');
 const movieRoutes = require('./movieRoutes');
+const signUpAndSignInRoutes = require('./signUpAndSignInRoutes');
 const NotFoundError = require('../errors/notFoundError');
 
+router.use('/', signUpAndSignInRoutes);
 router.use('/users/me', userRoutes);
 router.use('/movies', movieRoutes);
 
