@@ -3,6 +3,7 @@ const User = require('../models/user');
 const ConflictError = require('../errors/conflictError');
 const BadRequestError = require('../errors/badRequestError');
 const { saltRounds } = require('../utils/consts');
+const { generateToken } = require('../middlewares/auth');
 
 function createUser(req, res, next) {
   const { name, email, password } = req.body;
@@ -23,4 +24,20 @@ function createUser(req, res, next) {
     });
 }
 
-module.exports = { createUser };
+function login(req, res, next) {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = generateToken({ _id: user._id });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 3,
+        httpOnly: true,
+        sameSite: true,
+      });
+      res.send({ token });
+    })
+    .catch(next);
+}
+
+module.exports = { createUser, login };
