@@ -14,11 +14,15 @@ router.post('/', celebrate({
     image: Joi.string().required().pattern(URL_REGEX),
     trailerLink: Joi.string().required().pattern(URL_REGEX),
     thumbnail: Joi.string().required().pattern(URL_REGEX),
-    movieId: Joi.number().required().length().hex(), // add length of id 24?
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
 }), createMovie);
-router.delete('/:id', deleteMovie);
+router.delete('/:_id', celebrate({
+  params: Joi.object().keys({
+    _id: Joi.string().length(24).hex().required(),
+  }),
+}), deleteMovie);
 
 module.exxports = router;
