@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const { errors } = require('celebrate');
 const errorHandler = require('./middlewares/errorHandler');
@@ -8,7 +10,7 @@ const routes = require('./routes');
 const limiter = require('./utils/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 4000 } = process.env;
 
 mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
@@ -17,6 +19,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   .catch(() => console.log('No connection to DB'));
 
 const app = express();
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(limiter);
 
