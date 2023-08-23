@@ -4,8 +4,6 @@ require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET = 'secret' } = process.env;
 
-// const SECRET_KEY = 'secret';
-
 function generateToken(payload) {
   return jwt.sign(
     payload,

@@ -5,14 +5,12 @@ const bodyParser = require('body-parser');
 
 const { errors } = require('celebrate');
 const errorHandler = require('./middlewares/errorHandler');
-
+const { PORT, DB_ADDRESS } = require('./config');
 const routes = require('./routes');
 const limiter = require('./utils/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 4000 } = process.env;
-
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(DB_ADDRESS, {
   useNewUrlParser: true,
 })
   .then(() => console.log('Connected to DB'))

@@ -10,7 +10,11 @@ function createUser(req, res, next) {
 
   bcrypt.hash(password, saltRounds)
     .then((hash) => User.create({ name, email, password: hash }))
-    .then((user) => res.status(201).send(user)) // delete send(user)
+    .then((user) => res.status(201).send({
+      name: user.name,
+      email: user.email,
+      _id: user._id,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         return next(new ConflictError(`Пользователь с электронным адресом: ${email} уже зарегистрирован`));
