@@ -31,11 +31,12 @@ function updateUserInfo(req, res, next) {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || 'CastError') {
-        return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
-      }
+      console.log(err);
       if (err.code === 11000) {
         return next(new ConflictError(`Пользователь с электронным адресом: ${email} уже зарегистрирован`));
+      }
+      if (err.name === 'ValidationError' || 'CastError') {
+        return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
       }
       return next(err);
     });
