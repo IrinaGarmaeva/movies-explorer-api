@@ -5,7 +5,6 @@ const ConflictError = require('../errors/conflictError');
 
 function getCurrentUser(req, res, next) {
   const userId = req.user._id;
-  console.log(userId);
 
   return User.findById(userId)
     .then((user) => {

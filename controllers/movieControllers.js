@@ -4,7 +4,10 @@ const BadRequestError = require('../errors/badRequestError');
 const ForbiddenError = require('../errors/forbiddenError');
 
 function getMovies(req, res, next) {
-  return Movie.find({})
+  const userId = req.user._id;
+  console.log(userId);
+
+  return Movie.find({ owner: userId })
     .then((movies) => res.send(movies))
     .catch(next);
 }
@@ -53,19 +56,19 @@ function createMovie(req, res, next) {
 }
 
 function deleteMovie(req, res, next) {
-  const { movieId } = req.params;
+  const { _id } = req.params;
 
-  return Movie.findById(movieId)
+  return Movie.findById(_id)
     .then((movie) => {
       if (!movie) {
-        throw new NotFoundError(`Фильм с указанным _id: ${movieId} не найден`);
+        throw new NotFoundError(`Фильм с указанным _id: ${_id} не найден`);
       }
 
       if (String(movie.owner) !== req.user._id) {
         throw new ForbiddenError('Недостаточно прав для удаления фильма');
       }
 
-      return Movie.findByIdAndRemove(movieId)
+      return Movie.findByIdAndRemove(_id)
         .then((data) => res.send(data))
         .catch(next);
     })
