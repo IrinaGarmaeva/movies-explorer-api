@@ -25,4 +25,4 @@ router.delete('/:_id', celebrate({
   }),
 }), deleteMovie);
 
-module.exxports = router;
+module.exports = router;
