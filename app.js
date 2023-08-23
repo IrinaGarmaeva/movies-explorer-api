@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
+const helmet = require('helmet');
 const { errors } = require('celebrate');
+const cors = require('cors');
+
 const errorHandler = require('./middlewares/errorHandler');
 const { PORT, DB_ADDRESS } = require('./config');
 const routes = require('./routes');
@@ -17,7 +19,9 @@ mongoose.connect(DB_ADDRESS, {
   .catch(() => console.log('No connection to DB'));
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 app.use(cookieParser());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
