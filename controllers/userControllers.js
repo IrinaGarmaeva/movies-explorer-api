@@ -11,7 +11,10 @@ function getCurrentUser(req, res, next) {
       if (!user) {
         throw new NotFoundError(`Пользователь по указанному _id: ${userId} не найден`);
       }
-      res.send(user);
+      res.send({
+        email: user.email,
+        name: user.name,
+      });
     })
     .catch(next);
 }
