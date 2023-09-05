@@ -10,7 +10,7 @@ router.use('/', signUpAndSignInRoutes);
 router.use(checkAuth);
 router.use('/users', userRoutes);
 router.use('/movies', movieRoutes);
-router.use('/signout', signOutRoute);
+router.use('/', signOutRoute);
 
 router.use('/*', (req, res, next) => next(new NotFoundError('Указан некорректный путь в URL адресе')));
 
