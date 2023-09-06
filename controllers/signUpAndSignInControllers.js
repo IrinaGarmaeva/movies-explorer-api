@@ -8,20 +8,38 @@ const { generateToken } = require('../middlewares/auth');
 function createUser(req, res, next) {
   const { name, email, password } = req.body;
 
-  bcrypt.hash(password, saltRounds)
+  bcrypt
+    .hash(password, saltRounds)
     .then((hash) => User.create({ name, email, password: hash }))
-    .then((user) => res.status(201).send({
-      name: user.name,
-      email: user.email,
-      _id: user._id,
-    }))
+    .then((user) => {
+      const token = generateToken({ _id: user._id });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 3,
+        httpOnly: true,
+        sameSite: true,
+      });
+      res.status(201).send({
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+        token,
+      });
+    })
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError(`Пользователь с электронным адресом: ${email} уже зарегистрирован`));
+        return next(
+          new ConflictError(
+            `Пользователь с электронным адресом: ${email} уже зарегистрирован`,
+          ),
+        );
       }
 
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
+        return next(
+          new BadRequestError(
+            'Переданы некорректные данные при создании пользователя',
+          ),
+        );
       }
 
       return next(err);
