@@ -19,7 +19,7 @@ mongoose.connect(DB_ADDRESS, {
   .catch(() => console.log('No connection to DB'));
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
+app.use(cors({ origin: ['http://localhost:3001', 'https://movies.irina.nomoredomainsicu.ru', 'http://movies.irina.nomoredomainsicu.ru'], credentials: true }));
 app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json());
